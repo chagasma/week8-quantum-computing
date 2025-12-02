@@ -16,25 +16,11 @@ Demonstrar como credenciais podem ser interceptadas quando transmitidas via HTTP
 
 ### Configuração do Ambiente
 
-#### Passo 1: Iniciar o Servidor HTTP
-
-O servidor HTTP foi iniciado na porta 8080 para simular um site inseguro:
-
-![Servidor HTTP em execução](img/server.jpg)
-
-O servidor está pronto para receber requisições HTTP sem qualquer tipo de criptografia.
-
-#### Passo 2: Iniciar o Sniffer de Pacotes
-
-Um sniffer de pacotes foi configurado para capturar todo o tráfego de rede na porta 8080:
-
-![Sniffer capturando tráfego](img/server-02.jpg)
-
-O sniffer monitora passivamente todas as comunicações, aguardando dados sensíveis.
+Um servidor HTTP foi configurado na porta 8080 para simular um site inseguro, sem qualquer tipo de criptografia.
 
 ### Execução do Ataque
 
-#### Passo 3: Acesso à Página de Login e Submissão de Credenciais
+#### Passo 1: Acesso à Página de Login e Submissão de Credenciais
 
 O usuário acessa a página de login através do navegador e preenche suas credenciais:
 
@@ -44,7 +30,7 @@ A interface parece normal, mas toda comunicação está sendo transmitida em tex
 
 ### Resultado: Credenciais Interceptadas
 
-O sniffer captura todo o tráfego HTTP, incluindo as credenciais em texto plano que foram enviadas pelo formulário:
+Um sniffer de pacotes captura todo o tráfego HTTP, incluindo as credenciais em texto plano que foram enviadas pelo formulário:
 
 ![Credenciais interceptadas pelo sniffer](img/intercepted.jpg)
 
@@ -89,6 +75,8 @@ Foram gerados dois conjuntos de certificados:
 
 Um servidor HTTPS legítimo foi configurado na porta 9443:
 
+![Servidor HTTPS legítimo em execução](img/server.jpg)
+
 ```bash
 python3 src/legitimate_server.py
 ```
@@ -98,6 +86,8 @@ Este servidor representa um ambiente seguro e confiável.
 #### Passo 3: Proxy MITM com Certificado Falsificado
 
 Um proxy MITM foi configurado na porta 8443 usando um certificado falsificado:
+
+![Proxy MITM em execução](img/server-02.jpg)
 
 ```bash
 python3 src/mitm_proxy.py
