@@ -5,16 +5,19 @@ Demonstração de interceptação de credenciais em HTTP sem SSL.
 ## Execução
 
 ### Terminal 1: Iniciar o servidor
+
 ```bash
 python3 server.py
 ```
 
 ### Terminal 2: Iniciar o sniffer (requer root)
+
 ```bash
 sudo python3 sniffer.py
 ```
 
 ### Terminal 3: Abrir o navegador
+
 ```bash
 xdg-open http://localhost:8080
 ```
@@ -32,6 +35,7 @@ Ou acesse manualmente: `http://localhost:8080`
 ## O que isso demonstra
 
 HTTP transmite dados em texto plano. Qualquer pessoa na mesma rede pode interceptar:
+
 - Credenciais
 - Tokens de sessão
 - Dados pessoais
