@@ -18,6 +18,8 @@ Demonstrar como credenciais podem ser interceptadas quando transmitidas via HTTP
 
 Um servidor HTTP foi configurado na porta 8080 para simular um site inseguro, sem qualquer tipo de criptografia.
 
+![Console do servidor HTTP](img/server-02.jpg)
+
 ### Execução do Ataque
 
 #### Passo 1: Acesso à Página de Login e Submissão de Credenciais
@@ -86,8 +88,6 @@ Este servidor representa um ambiente seguro e confiável.
 #### Passo 3: Proxy MITM com Certificado Falsificado
 
 Um proxy MITM foi configurado na porta 8443 usando um certificado falsificado:
-
-![Proxy MITM em execução](img/server-02.jpg)
 
 ```bash
 python3 src/mitm_proxy.py
