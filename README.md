@@ -32,6 +32,42 @@ xdg-open http://localhost:8080
 2. Click "Login"
 3. Observe credentials in both terminals
 
+## Demo 1B: HTTPS Sniffing (Encrypted Traffic)
+
+Shows that you can still capture packets over HTTPS, but the payload is unreadable without the TLS keys.
+
+### Setup
+
+Generate certificates once (if not already created):
+
+```bash
+./scripts/generate_certs.sh
+```
+
+Terminal 1 - Start legitimate HTTPS server:
+
+```bash
+python3 src/legitimate_server.py
+```
+
+Terminal 2 - Start TLS sniffer (requires root):
+
+```bash
+sudo python3 src/sniffer_https.py
+```
+
+Terminal 3 - Open browser (accept the self-signed warning):
+
+```bash
+firefox --new-instance https://localhost:9443
+```
+
+### Test
+
+1. Submit login form
+2. TLS sniffer shows captured packets with hex bytes
+3. Note that usernames/passwords are **not** visible because the traffic is encrypted
+
 ## Demo 2: CA Certificate Forgery Attack (MITM)
 
 Demonstrates Man-in-the-Middle attack with fake certificate.

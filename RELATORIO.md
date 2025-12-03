@@ -56,6 +56,48 @@ O sniffer captura todo o tráfego HTTP, incluindo as credenciais em texto plano 
 
 ---
 
+## Ataque 1B: Captura de Tráfego HTTPS (Criptografado)
+
+### Objetivo
+Mostrar que é possível interceptar pacotes HTTPS, porém o conteúdo fica ilegível sem a chave privada.
+
+### Configuração do Ambiente
+
+#### Passo 1: Gerar Certificados (uma vez)
+```bash
+./scripts/generate_certs.sh
+```
+
+#### Passo 2: Servidor HTTPS Legítimo
+Iniciar o servidor seguro na porta 9443:
+```bash
+python3 src/legitimate_server.py
+```
+
+#### Passo 3: Sniffer de TLS
+Iniciar o sniffer dedicado a HTTPS (requer sudo):
+```bash
+sudo python3 src/sniffer_https.py
+```
+
+### Execução do Teste
+O usuário acessa `https://localhost:9443`, aceita o certificado autoassinado e envia as credenciais pelo formulário.
+
+### Resultado: Pacotes Interceptados, Conteúdo Ilegível
+![intercepted_https](./img/intercepted_https.png)
+- O sniffer mostra os pacotes capturados em hexadecimal (payload criptografado)
+- Usuário e senha não aparecem no dump de rede
+- Sem a chave TLS, o atacante não consegue ler os dados
+
+**Conclusão**: HTTPS protege contra interceptação passiva; os dados capturados ficam criptografados.
+
+### Impacto de Segurança
+- **Proteção de confidencialidade**: Mesmo com captura de pacotes, os dados sensíveis permanecem ilegíveis.
+- **Necessidade de chaves privadas**: Sem a chave TLS ou um key log, o atacante não consegue decifrar o conteúdo.
+- **Resiliência a sniffers passivos**: Ferramentas de captura não revelam credenciais quando o transporte está cifrado.
+
+---
+
 ## Ataque 2: Man-in-the-Middle (MITM) com Certificado Falsificado
 
 ### Objetivo
@@ -175,4 +217,3 @@ Estas demonstrações evidenciam que:
 Este relatório demonstrou de forma prática como vulnerabilidades em comunicações HTTP podem ser exploradas. Os ataques mostrados são reais e podem ocorrer em ambientes de produção se as devidas precauções não forem tomadas.
 
 A segurança da informação é uma responsabilidade compartilhada entre desenvolvedores, administradores de sistema e usuários finais. Todos devem estar cientes dos riscos e tomar as medidas apropriadas para proteger dados sensíveis.
-
