@@ -1,6 +1,16 @@
 import math
 import time
-from sympy import prime
+
+
+def primes_up_to(limit: int):
+    sieve = [True] * (limit + 1)
+    sieve[0:2] = [False, False]
+    for p in range(2, int(limit ** 0.5) + 1):
+        if sieve[p]:
+            step = p
+            sieve[p * p : limit + 1 : step] = [False] * (((limit - p * p) // step) + 1)
+    return [i for i, flag in enumerate(sieve) if flag]
+
 
 def polland_loop(N, verbose=False):
     B = 10
@@ -30,21 +40,14 @@ def polland_p_minus_1(N, B, verbose=False):
     if 1 < g < N:
         return g
 
-    # gerar primos com sympy.prime
-    i = 1
-    pri = prime(i)
+    primes = primes_up_to(B)
 
-    while pri <= B:
-        # maior expoente e com pri**e <= B
-        e = math.floor(math.log(B, pri))  # equivalente a log(B)/log(pri)
+    for idx, pri in enumerate(primes, start=1):
+        e = math.floor(math.log(B, pri))
         a = pow(a, pri**e, N)
 
-        # log "de vez em quando"
-        if verbose and i % 50 == 0:
-            print(f"[pollard] B={B} | prime index={i}, pri={pri}, e={e}, a={a}")
-
-        i += 1
-        pri = prime(i)
+        if verbose and idx % 50 == 0:
+            print(f"[pollard] B={B} | prime index={idx}, pri={pri}, e={e}, a={a}")
 
     g = math.gcd(a - 1, N)
     if 1 < g < N:
@@ -53,9 +56,6 @@ def polland_p_minus_1(N, B, verbose=False):
 
 
 if __name__ == "__main__":
-    # Escolhendo dois primos
-    # p = 983
-    # q = 997
     p = 97
     q = 101
 
@@ -68,4 +68,4 @@ if __name__ == "__main__":
         print(f"\nFound factor: {result}")
         print(f"Other factor: {N // result}")
     else:
-        print("\nNo factor found 😢")
+        print("\nNo factor found")

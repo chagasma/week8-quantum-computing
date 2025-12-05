@@ -1,9 +1,16 @@
 # compare_factor.py
 import time
-from sympy import factorint
+
+try:
+    from sympy import factorint
+    HAS_SYMPY = True
+except ImportError:
+    factorint = None
+    HAS_SYMPY = False
 from dixon import dixon_factorization
 from fermat import fermat_factorization
 from polland_p_1 import polland_loop  # importa do outro arquivo
+from snfs import snfs_factorization, SNFS_EXAMPLES
 
 
 def print_result(name, factors, elapsed):
@@ -15,7 +22,7 @@ def print_result(name, factors, elapsed):
         print("  Failed to find a non-trivial factor")
     print(f"  Time: {elapsed:.6f} seconds")
 
-def run_all(n):
+def run_all(n, run_snfs=False):
     print(f"N = {n}")
 
     # 1) Seu algoritmo: Pollard p-1
@@ -37,31 +44,44 @@ def run_all(n):
     t_dixon = time.perf_counter() - start
     print_result("Dixon", dixon_factors, t_dixon)
 
-    # 4) Biblioteca: sympy.factorint
-    start = time.perf_counter()
-    fact_dict = factorint(n)   # {prime: exponent}
-    t_sympy = time.perf_counter() - start
+    # 4) SNFS (toy; opcional, didático, pode falhar rápido)
+    if run_snfs:
+        start = time.perf_counter()
+        snfs_factors = snfs_factorization(n, bound=200_000, max_k=800, min_relations=20)
+        t_snfs = time.perf_counter() - start
+        print_result("SNFS (toy)", snfs_factors, t_snfs)
 
+    # 5) Biblioteca: sympy.factorint
     print("\n[SymPy factorint] Result:")
-    print(f"  Factorization dict: {fact_dict}")
-    print(f"  Time: {t_sympy:.6f} seconds")
+    if HAS_SYMPY:
+        start = time.perf_counter()
+        fact_dict = factorint(n)   # {prime: exponent}
+        t_sympy = time.perf_counter() - start
+        print(f"  Factorization dict: {fact_dict}")
+        print(f"  Time: {t_sympy:.6f} seconds")
+    else:
+        print("  sympy não instalado")
 
 
 def main():
     # p e q (fatores próximos para permitir comparação entre métodos)
+    snfs_ex = SNFS_EXAMPLES[0]
     tests = [
         ("Fácil", 97, 101),
         ("Intermediário", 983, 997),
         ("Difícil", 10007, 10009),
         ("Muito difícil (espalhado)", 104729, 1299709),
+        ("SNFS exemplo", snfs_ex.known_factors[0], snfs_ex.known_factors[1]),
     ]
+
+    run_snfs = True  # SNFS toy ativado (usa n pequenos da lista)
 
     for label, p, q in tests:
         N = p * q
         print("\n" + "=" * 70)
         print(f"{label} | p * q = {p} * {q} = {N}")
         print("=" * 70)
-        run_all(N)
+        run_all(N, run_snfs=run_snfs)
 
 
 if __name__ == "__main__":
