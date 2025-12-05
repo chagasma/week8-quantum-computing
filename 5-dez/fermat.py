@@ -1,18 +1,47 @@
 import math
+from typing import Optional, Tuple
 
-n = int(input())
 
-r = math.sqrt(n)
-a = math.ceil(r)
+def fermat_factorization(n: int, max_iterations: int = 10_000) -> Optional[Tuple[int, int]]:
+    """
+    Factorize an odd integer using Fermat's method.
 
-b2 = a**2 - n
+    Returns (p, q) or None if no factors are found within max_iterations.
+    """
+    if n <= 0:
+        return None
 
-while b2 < 0 or math.sqrt(b2) % 1 != 0:
-    a += 1
-    b2 = a**2 - n
+    # Handle even numbers quickly
+    if n % 2 == 0:
+        return 2, n // 2
 
-b = int(math.sqrt(b2))
-f1 = a - b
-f2 = a + b
+    a = math.isqrt(n)
+    if a * a < n:
+        a += 1  # ceil(sqrt(n))
 
-print(f1, f2)
+    b2 = a * a - n
+
+    for _ in range(max_iterations):
+        b = math.isqrt(b2)
+        if b * b == b2:
+            f1 = a - b
+            f2 = a + b
+
+            if 1 < f1 < n:
+                return f1, f2
+            return None
+
+        a += 1
+        b2 = a * a - n
+
+    return None
+
+
+if __name__ == "__main__":
+    n = int(input("Número a fatorar (Fermat): "))
+    result = fermat_factorization(n)
+    if result:
+        p, q = result
+        print(p, q)
+    else:
+        print("Fatores não encontrados dentro do limite de iterações.")
