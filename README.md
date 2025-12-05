@@ -15,3 +15,4 @@ Este repositório contém as atividades práticas realizadas durante a semana 8 
 - **[2-dez/](2-dez/)** - Demonstrações de ataques de rede (HTTP Sniffing, HTTPS Sniffing, MITM)
 - **[3-dez/](3-dez/)** - Materiais sobre computação quântica
 - **[4-dez/](4-dez/)** - Conceitos de inversa multiplicativa em criptografia
+- **[5-dez/](5-dez/)** - Algoritmos de fatoração de números
